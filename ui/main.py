@@ -5,6 +5,7 @@ from fastapi import FastAPI, Request, Form
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
+from ui.github_client import apply_labels_to_pr
 from ui.drift import scan_repo
 from ui.devin_client import create_devin_session
 
@@ -59,5 +60,29 @@ def run(request: Request, repo_name: str = Form(...)):
             "session_result": session_result,
             "error": error,
             "repo_name": repo_name,
+        },
+    )
+
+@app.post("/label-pr", response_class=HTMLResponse)
+def label_pr(request: Request, pr_number: int = Form(...)):
+    scan_result = scan_repo(".")
+    session_result = None
+    error = None
+    label_result = None
+
+    try:
+        label_result = apply_labels_to_pr(pr_number)
+    except Exception as exc:
+        error = str(exc)
+
+    return templates.TemplateResponse(
+        "index.html",
+        {
+            "request": request,
+            "scan_result": scan_result,
+            "session_result": session_result,
+            "label_result": label_result,
+            "error": error,
+            "repo_name": f"{GITHUB_OWNER}/{GITHUB_REPO}" if False else "",
         },
     )
