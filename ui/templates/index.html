@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>DocPulse</title>
+    <style>
+      body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; line-height: 1.5; }
+      .card { border: 1px solid #ddd; border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+      button { padding: 10px 14px; border-radius: 8px; border: 1px solid #999; cursor: pointer; }
+      input { padding: 10px; width: 320px; }
+      .error { color: #b00020; }
+      .good { color: #0a7a2f; }
+      code { background: #f4f4f4; padding: 2px 6px; border-radius: 4px; }
+    </style>
+  </head>
+  <body>
+    <h1>DocPulse</h1>
+    <p>Devin-powered docs drift detection and remediation demo.</p>
+
+    <div class="card">
+      <h2>1. Scan for drift</h2>
+      <form method="post" action="/scan">
+        <button type="submit">Scan Repository</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>2. Send remediation task to Devin</h2>
+      <form method="post" action="/run">
+        <input type="text" name="repo_name" placeholder="datastack-docs-drift-demo" value="{{ repo_name or '' }}" required />
+        <button type="submit">Create Devin Session</button>
+      </form>
+    </div>
+
+    {% if scan_result %}
+    <div class="card">
+      <h2>Scan results</h2>
+      <p class="{{ 'good' if scan_result.drift_found else '' }}">
+        Drift found: <strong>{{ scan_result.drift_found }}</strong>
+      </p>
+      <ul>
+        {% for item in scan_result.findings %}
+        <li>{{ item }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    {% if session_result %}
+    <div class="card">
+      <h2>Devin session created</h2>
+      <p><strong>Mode:</strong> {{ session_result.mode }}</p>
+      <p><strong>Session ID:</strong> {{ session_result.session_id }}</p>
+      <p><strong>Status:</strong> {{ session_result.status }}</p>
+      {% if session_result.url %}
+      <p><a href="{{ session_result.url }}" target="_blank">Open session</a></p>
+      {% else %}
+      <p>No session URL returned yet.</p>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    {% if error %}
+    <div class="card">
+      <h2>Error</h2>
+      <p class="error">{{ error }}</p>
+      <p>Switch to mock mode if needed by setting <code>USE_MOCK_DEVIN=true</code>.</p>
+    </div>
+    {% endif %}
+  </body>
+</html>
