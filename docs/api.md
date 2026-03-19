@@ -8,11 +8,46 @@ Creates a user.
 
 | Field | Type | Required |
 |---|---|---|
-| name | string | yes |
+| email | string (email) | yes |
+| full_name | string | yes |
+| plan | string | no (default: "free") |
 
 ### Example
 
 ```bash
 curl -X POST http://localhost:8000/users \
   -H "Content-Type: application/json" \
-  -d '{"name":"Jane Doe"}'
+  -d '{"email":"jane@example.com","full_name":"Jane Doe","plan":"free"}'
+```
+
+### Response
+
+```json
+{
+  "id": "usr_123",
+  "email": "jane@example.com",
+  "full_name": "Jane Doe",
+  "plan": "free"
+}
+```
+
+## GET /purchases/{purchase_id}
+
+Retrieves a purchase by ID.
+
+### Example
+
+```bash
+curl http://localhost:8000/purchases/pur_456
+```
+
+### Response
+
+```json
+{
+  "purchase_id": "pur_456",
+  "status": "processed",
+  "amount_cents": 2599,
+  "currency": "USD"
+}
+```
