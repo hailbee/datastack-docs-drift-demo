@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>DocPulse</title>
+    <title>DocPulse — Devin Powered Documentation Drift Automation</title>
     <style>
       body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; line-height: 1.5; }
       .card { border: 1px solid #ddd; border-radius: 10px; padding: 20px; margin-bottom: 20px; }
@@ -14,8 +14,10 @@
   </head>
   <body>
     <h1>DocPulse</h1>
-    <p>Devin-powered docs drift detection and remediation demo.</p>
-
+    <p>
+    Detect when API documentation drifts from code and automatically create a Devin task
+    to update documentation and open a reviewable pull request.
+    </p>
     <div class="card">
       <h2>1. Scan for drift</h2>
       <form method="post" action="/scan">
@@ -28,6 +30,14 @@
       <form method="post" action="/run">
         <input type="text" name="repo_name" placeholder="datastack-docs-drift-demo" value="{{ repo_name or '' }}" required />
         <button type="submit">Create Devin Session</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <h2>3. Apply labels to Devin PR</h2>
+      <form method="post" action="/label-pr">
+        <input type="number" name="pr_number" placeholder="PR number, e.g. 7" required />
+        <button type="submit">Apply Labels</button>
       </form>
     </div>
 
@@ -66,5 +76,17 @@
       <p>Switch to mock mode if needed by setting <code>USE_MOCK_DEVIN=true</code>.</p>
     </div>
     {% endif %}
+
+    {% if label_result %}
+    <div class="card">
+      <h2>Labels applied</h2>
+      <ul>
+        {% for label in label_result %}
+        <li>{{ label.name }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
   </body>
 </html>
