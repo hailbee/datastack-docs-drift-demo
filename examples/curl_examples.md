@@ -5,4 +5,5 @@
 ```bash
 curl -X POST http://localhost:8000/users \
   -H "Content-Type: application/json" \
-  -d '{"name":"Jane Doe"}'
+  -d '{"email":"jane@example.com","full_name":"Jane Doe","plan":"free"}'
+```
