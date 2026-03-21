@@ -14,7 +14,9 @@ Request body:
 
 ```json
 {
-  "name": "Jane Doe"
+  "email": "jane@example.com",
+  "full_name": "Jane Doe",
+  "plan": "free"
 }
 ```
 
@@ -23,28 +25,32 @@ Example response:
 ```json
 {
   "id": "usr_123",
-  "name": "Jane Doe"
+  "email": "jane@example.com",
+  "full_name": "Jane Doe",
+  "plan": "free"
 }
 ```
 
 ---
 
-### Get Order
+### Get Purchase
 
-Endpoint: `GET /orders/{order_id}`
+Endpoint: `GET /purchases/{purchase_id}`
 
 Example request:
 
 ```bash
-curl http://localhost:8000/orders/ord_123
+curl http://localhost:8000/purchases/pur_123
 ```
 
 Example response:
 
 ```json
 {
-  "order_id": "ord_123",
-  "status": "paid"
+  "purchase_id": "pur_123",
+  "status": "processed",
+  "amount_cents": 2599,
+  "currency": "USD"
 }
 ```
 
